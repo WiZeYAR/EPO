@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, List, Tuple
 from .config import DataBatch
 from . import Config
 from multiprocessing import Pool
@@ -14,7 +14,7 @@ class DataModule(ptl.LightningDataModule):
         super().__init__()
         self.conf = conf
 
-    def collate_batch(self, batch: list[DataBatch]) -> DataBatch:
+    def collate_batch(self, batch: List[DataBatch]) -> DataBatch:
         """Custom batch creator"""
         tokens = map(lambda x: x.tokens, batch)
         masks = map(lambda x: x.attention_masks, batch)
@@ -38,7 +38,7 @@ class DataModule(ptl.LightningDataModule):
 
         # Setting classes for the datasets
         total_len = sum(map(len, (json_other, json_y02w)))
-        class_claims: chain[tuple[bool, list[str]]] = chain(
+        class_claims: chain[Tuple[bool, List[str]]] = chain(
             *[
                 [(cls, claims) for _, claims in data]
                 for cls, data in [

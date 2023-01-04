@@ -1,10 +1,11 @@
+from typing import List, Tuple
 import torch
 from epo.supervised import Config, DataBatch, train
 from transformers import AutoTokenizer, DistilBertForSequenceClassification
 import ray.tune as tune
 
 
-def prepare_batch(inp: tuple[bool, list[str]]) -> DataBatch:
+def prepare_batch(inp: Tuple[bool, List[str]]) -> DataBatch:
     """A function to prepare a data batch from raw data"""
     is_y02w, claims = inp[0], "".join(inp[1])
     encoding = AutoTokenizer.from_pretrained("distilbert-base-uncased")(

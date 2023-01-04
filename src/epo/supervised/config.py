@@ -1,4 +1,4 @@
-from typing import Callable, NamedTuple, TypedDict
+from typing import Callable, NamedTuple, TypedDict, Tuple, List
 import torch
 
 
@@ -31,7 +31,7 @@ class Config(TypedDict):
     # The neural network consists of the following parts:
     # 1. Tokenizer -- some function, which turns raw data into a tensor
     #    that can later be passed into the encoder
-    tokenizer: Callable[[tuple[bool, list[str]]], DataBatch]
+    tokenizer: Callable[[Tuple[bool, List[str]]], DataBatch]
     # 2. Classifier -- a model, which learns to map token space tensors into the
     #    class tensors
     classifier: torch.nn.Module

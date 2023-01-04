@@ -1,5 +1,4 @@
 from ray.tune.integration.pytorch_lightning import TuneReportCallback
-from pytorch_lightning.loggers.tensorboard import TensorBoardLogger
 from .config import Config, DataBatch
 from .datamodule import DataModule
 from .metamodel import Metamodel
