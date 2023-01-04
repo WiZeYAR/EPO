@@ -1,6 +1,7 @@
 import torch
 from epo.supervised import Config, DataBatch, train
 from transformers import AutoTokenizer, DistilBertForSequenceClassification
+import ray.tune as tune
 
 
 def prepare_batch(inp: tuple[bool, list[str]]) -> DataBatch:
@@ -19,19 +20,43 @@ def prepare_batch(inp: tuple[bool, list[str]]) -> DataBatch:
     )
 
 
-if __name__ == "__main__":
+def train_single():
     train(
         Config(
-            num_workers=8,
+            num_workers=1,
             debug=True,
             random_seed=0,
             data_dir="./data",
             train_val_split=0.8,
             batch_size=5,
             tokenizer=prepare_batch,
+            gpus=1 if torch.cuda.is_available() else 0,
             classifier=DistilBertForSequenceClassification.from_pretrained(
                 "distilbert-base-uncased"
             ),
             optimizer=lambda model: torch.optim.Adam(model.parameters(), lr=1e-3),
         )
     )
+
+
+def train_tune():
+    search_space = dict(
+        num_workers=1,
+        debug=True,
+        random_seed=0,
+        data_dir="/home/wize/Repositories/EPO/data",
+        train_val_split=0.8,
+        batch_size=tune.choice([4, 8]),
+        tokenizer=prepare_batch,
+        gpus=0,
+        classifier=DistilBertForSequenceClassification.from_pretrained(
+            "distilbert-base-uncased"
+        ),
+        optimizer=lambda model: torch.optim.Adam(model.parameters(), lr=1e-3),
+    )
+    experiment = tune.run(train, config=search_space, num_samples=2)
+    print(experiment.results)
+
+
+if __name__ == "__main__":
+    train_tune()

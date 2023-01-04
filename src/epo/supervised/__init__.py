@@ -1,4 +1,5 @@
 from ray.tune.integration.pytorch_lightning import TuneReportCallback
+from pytorch_lightning.loggers.tensorboard import TensorBoardLogger
 from .config import Config, DataBatch
 from .datamodule import DataModule
 from .metamodel import Metamodel
@@ -12,12 +13,16 @@ def train(conf: Config):
     """
     ptl.seed_everything(conf["random_seed"], workers=True)
     ptl.Trainer(
+        gpus=conf["gpus"],
         deterministic=True,
         callbacks=[
             TuneReportCallback(
-                metrics={"loss": "ptl/val_loss", "acc": "ptl/val_accuracy"},
+                metrics={
+                    "val_loss": "val_loss",
+                    "val_accuracy": "val_accuracy",
+                },
                 on="validation_end",
-            )
+            ),
         ],
         fast_dev_run=conf["debug"],
     ).fit(

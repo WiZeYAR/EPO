@@ -25,6 +25,7 @@ class Config(TypedDict):
     batch_size: int
     num_workers: int
     debug: bool
+    gpus: int
 
     # ---- NEURAL NETWORK ---- #
     # The neural network consists of the following parts:
