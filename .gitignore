@@ -1,5 +1,6 @@
 ### Project-Specific ###
-/data
+data
+lightning_logs
 
 # Created by https://www.toptal.com/developers/gitignore/api/linux,windows,macos,visualstudiocode,vim,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,windows,macos,visualstudiocode,vim,python
